@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  db:
+    image: postgres
+    ports:
+      - '6825:5432'
+
+  nginx:
+    build: ./docker/nginx
+    ports:
+      - '80:80'
+    links:
+      - app
+
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    ports:
+      - '8000:3000'
+    links:
+      - db
+    volumes:
+      - gems:/gems
+      - ./:/app
+
+volumes:
+  gems:
+    driver: local
